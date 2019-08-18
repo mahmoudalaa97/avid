@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1079365459598",
+    "firebase_url": "https://avid-d7792.firebaseio.com",
+    "project_id": "avid-d7792",
+    "storage_bucket": "avid-d7792.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079365459598:android:a2bd67b80d038416",
+        "android_client_info": {
+          "package_name": "com.mahmoudalaa.avid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079365459598-tg6armpga93aef4be6ssdjl62t8i5i0j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mahmoudalaa.avid",
+            "certificate_hash": "4030ad5c9a260bd5e6bd31d5d0c8f70fab24c913"
+          }
+        },
+        {
+          "client_id": "1079365459598-nsfs52d0dsa4j14fvcs3lv1s9j4t4ha1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIdrBsa3CpPDFhq3N0VolbC0hv7pd3EYo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1079365459598-nsfs52d0dsa4j14fvcs3lv1s9j4t4ha1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

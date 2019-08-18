@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1079365459598-h5h7a729fhvemdlht0028f506e3i7r7p.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1079365459598-h5h7a729fhvemdlht0028f506e3i7r7p</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1079365459598-m86gmg8qr0hghfd27d50ks7oac4i8bg9.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDrade5rh7-GS8CEaSmNW8qOix5XN1st_k</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1079365459598</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mahmoudalaa.avid</string>
+	<key>PROJECT_ID</key>
+	<string>avid-d7792</string>
+	<key>STORAGE_BUCKET</key>
+	<string>avid-d7792.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1079365459598:ios:a2bd67b80d038416</string>
+	<key>DATABASE_URL</key>
+	<string>https://avid-d7792.firebaseio.com</string>
+</dict>
+</plist>
