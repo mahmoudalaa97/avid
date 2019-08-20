@@ -425,12 +425,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _formKey.currentState.save();
       if (_agreeTerms == true) {
         //If Sign Up Successfully
-        //@TODO here code to Connect with firebase
-        print("username= $_username\n "
-            "Fullname = $_fullName\n"
-            "your location= $_yourLocation\n"
-            "email= $_email\n"
-            "password= $_password\n");
         signUp();
       } else {
         // If user not Agree Terms
