@@ -62,15 +62,15 @@ class Auth implements BaseAuth {
       String fullName,
       String yourLocation,
       String email}) {
-    var pathProfilePicture;
-    profilePicture != null
-        ? pathProfilePicture = 'UsersProfilePicture/$userUid' + '.jpg'
-        : pathProfilePicture = 'UsersProfilePicture/default' + '.jpg';
-    StorageReference reference =
-        FirebaseStorage.instance.ref().child(pathProfilePicture);
-    final StorageUploadTask task = reference.putFile(profilePicture);
+    if (profilePicture != null) {
+      var pathProfilePicture = 'UsersProfilePicture/$userUid' + '.jpg';
+      StorageReference reference =
+          FirebaseStorage.instance.ref().child(pathProfilePicture);
+      final StorageUploadTask task = reference.putFile(profilePicture);
+    }
+    var nameOfPicture = profilePicture == null ? 'default.png' : userUid+'.jpg';
     var fullPathProfilePicture =
-        'https://firebasestorage.googleapis.com/v0/b/avid-d7792.appspot.com/o/UsersProfilePicture%2F$userUid.jpg?alt=media';
+        'https://firebasestorage.googleapis.com/v0/b/avid-d7792.appspot.com/o/UsersProfilePicture%2F$nameOfPicture?alt=media';
     return databaseReference.child("Users").child("$userUid").set({
       'Username': '$username',
       'FullName': '$fullName',

@@ -451,7 +451,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (user != null) {
         try {
           widget.auth.createUsers(
-            profilePicture: _imageProfile==null?null:_imageProfile,
+            profilePicture: _imageProfile,
               userUid: user,
               username: _username,
               fullName: _fullName,
@@ -462,7 +462,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             goToSignIn();
           });
           showSnackBarSuccess();
-        } catch (e) {}
+        } catch (e) {
+          print("erooooooor======$e");
+        }
       }
     } catch (e) {
       validateFireBaseError(e);
