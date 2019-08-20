@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:avid/screens/terms_screen.dart';
 import 'package:avid/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -379,7 +380,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         FlatButton(
             padding: EdgeInsets.all(0),
-            onPressed: () {},
+            onPressed: _viewTerms,
             child: Text(
               "I Agree With Terms Of Service",
               style: TextStyle(color: Colors.white, fontSize: 12),
@@ -517,5 +518,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       _imageProfile = image;
     });
+  }
+
+  void _viewTerms() {
+  Navigator.push(context, MaterialPageRoute(builder: (_)=>TermsScreen()));
+
   }
 }
