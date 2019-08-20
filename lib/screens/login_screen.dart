@@ -79,7 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ///   Email TextFiled   ///
               ////////////////////////////
               TextFormField(
-                autofocus: true,
+
+
                 onSaved: (email) {
                   _email = email;
                 },

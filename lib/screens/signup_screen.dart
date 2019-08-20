@@ -94,7 +94,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ///   Username TextFiled   ///
               /////////////////////////////
               TextFormField(
-                autofocus: true,
                 onSaved: (username) {
                   _username = username;
                 },
