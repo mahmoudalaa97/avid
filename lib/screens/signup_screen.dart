@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:avid/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({this.auth, this.onSignedUp});
@@ -16,7 +18,10 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   ///------------------------------------------------  Parameters Section -------------------------------------///
   int colorBackground = 0xff333333;
-  TextStyle _styleTextFormFiled = TextStyle(color: Colors.white, fontSize: 14);
+  TextStyle _styleTextFormFiled = TextStyle(
+    color: Colors.white,
+    fontSize: 14,
+  );
   InputBorder _borderTextFormFiled =
       UnderlineInputBorder(borderSide: BorderSide(color: Colors.white));
 
@@ -59,6 +64,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // To Save Your Password Here
   String _password;
 
+  File _imageProfile;
+
   ///------------------------------------------------  BuildWidget Section -------------------------------------///
   @override
   Widget build(BuildContext context) {
@@ -90,6 +97,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
           autovalidate: _autoValidate,
           child: Column(
             children: <Widget>[
+              InkWell(
+                onTap: getImage,
+                child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.white,
+                        ),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          padding: _imageProfile == null
+                              ? EdgeInsets.all(15)
+                              : EdgeInsets.all(10),
+                          child: _imageProfile == null
+                              ? Icon(
+                                  Icons.photo_camera,
+                                  color: Colors.white,
+                                  size: 30,
+                                )
+                              : Image.file(_imageProfile,
+                                  height: 60, width: 60, fit: BoxFit.cover),
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  right: BorderSide(color: Colors.white))),
+                        ),
+                        Expanded(
+                            child: Container(
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          child: _imageProfile == null
+                              ? Text(
+                                  "Please attach your image to set as profile picture.",
+                                  style: _styleTextFormFiled,
+                                )
+                              : Text(
+                                  "Profile Image Selected",
+                                  style: TextStyle(
+                                      color: Colors.green, fontSize: 22),
+                                  textAlign: TextAlign.center,
+                                ),
+                        )),
+                      ],
+                    )),
+              ),
+              SizedBox(
+                height: 15,
+              ),
               ///////////////////////////////
               ///   Username TextFiled   ///
               /////////////////////////////
@@ -224,7 +278,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   labelText: 'Email',
                   labelStyle: _styleTextFormFiled,
                 ),
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (term) {
                   FocusScope.of(context).requestFocus(_passwordFocus);
@@ -397,6 +451,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (user != null) {
         try {
           widget.auth.createUsers(
+            profilePicture: _imageProfile==null?null:_imageProfile,
               userUid: user,
               username: _username,
               fullName: _fullName,
@@ -457,5 +512,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   /// Go To Sign In Screen
   goToSignIn() {
     Navigator.of(context).pop();
+  }
+
+  /// get Image from device
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
+    setState(() {
+      _imageProfile = image;
+    });
   }
 }

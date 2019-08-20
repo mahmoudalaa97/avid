@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   labelText: 'Email',
                   labelStyle: _styleTextFormFiled,
                 ),
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (term) {
                   FocusScope.of(context).requestFocus(_passwordFocus);
