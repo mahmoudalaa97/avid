@@ -1,5 +1,7 @@
+import 'package:avid/utils/style.dart';
 import 'package:flutter/material.dart';
 import '../services/auth.dart';
+import 'forgot_password_screen.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,12 +17,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   ///------------------------------------------------  Parameters Section -------------------------------------///
-  // black Color For BackGround
-  int colorBackground = 0xff333333;
 
-  TextStyle _styleTextFormFiled = TextStyle(color: Colors.white, fontSize: 14);
-  InputBorder _borderTextFormFiled =
-      UnderlineInputBorder(borderSide: BorderSide(color: Colors.white));
+
 
   // To Jump Next TextFormField Password
   FocusNode _passwordFocus = FocusNode();
@@ -47,9 +45,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       key: _scaffoldStateKey,
       appBar: AppBar(
-        backgroundColor: Color(colorBackground),
+        backgroundColor: CColors.colorBackground,
       ),
-      backgroundColor: Color(colorBackground),
+      backgroundColor: CColors.colorBackground,
       body: ListView(
         children: <Widget>[
           buildHeaderTitle(),
@@ -79,8 +77,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ///   Email TextFiled   ///
               ////////////////////////////
               TextFormField(
-
-
                 onSaved: (email) {
                   _email = email;
                 },
@@ -95,15 +91,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                 },
                 decoration: InputDecoration(
-                  focusedBorder: _borderTextFormFiled,
-                  enabledBorder: _borderTextFormFiled,
+                  focusedBorder: Style.borderTextFormFiled,
+                  enabledBorder:  Style.borderTextFormFiled,
                   fillColor: Colors.white,
                   prefixIcon: Icon(
                     Icons.person_outline,
                     color: Colors.white,
                   ),
                   labelText: 'Email',
-                  labelStyle: _styleTextFormFiled,
+                  labelStyle: Style.styleTextFormFiled,
                 ),
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
@@ -132,14 +128,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   }
                 },
                 decoration: InputDecoration(
-                  focusedBorder: _borderTextFormFiled,
-                  enabledBorder: _borderTextFormFiled,
+                  focusedBorder: Style.borderTextFormFiled,
+                  enabledBorder: Style.borderTextFormFiled,
                   prefixIcon: Icon(
                     Icons.lock_outline,
                     color: Colors.white,
                   ),
                   labelText: 'Password',
-                  labelStyle: _styleTextFormFiled,
+                  labelStyle: Style.styleTextFormFiled,
                 ),
                 keyboardType: TextInputType.text,
                 style: TextStyle(color: Colors.white),
@@ -194,7 +190,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget buildForgotPassword() {
     return FlatButton(
         padding: EdgeInsets.all(0),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_)=>ForgotPasswordScreen(auth: Auth(),)));
+        },
         child: Text(
           "FORGOT LOG IN ?",
           style: TextStyle(color: Colors.white, fontSize: 12),
@@ -286,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 goToSignUpScreen();
               },
-              textColor: Colors.black,
+              textColor: CColors.white,
             ),
           ));
           break;

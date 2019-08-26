@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:avid/screens/terms_screen.dart';
 import 'package:avid/services/auth.dart';
+import 'package:avid/utils/search_location.dart';
+import 'package:avid/utils/style.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,13 +21,6 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   ///------------------------------------------------  Parameters Section -------------------------------------///
-  int colorBackground = 0xff333333;
-  TextStyle _styleTextFormFiled = TextStyle(
-    color: Colors.white,
-    fontSize: 14,
-  );
-  InputBorder _borderTextFormFiled =
-      UnderlineInputBorder(borderSide: BorderSide(color: Colors.white));
 
   // To Jump Next TextFormField Full Name
   FocusNode _fullNameFocus = FocusNode();
@@ -57,7 +53,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _fullName;
 
   // To Save Your Location Here
-  String _yourLocation;
+  String _yourCity = "Select location";
+  String _yourCityDefault = "Select location";
+  String _yourState = "";
+  String _yourStateDefault = "";
 
   // To Save Email Here
   String _email;
@@ -65,6 +64,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   // To Save Your Password Here
   String _password;
 
+  // To save Your ImageProfile
   File _imageProfile;
 
   ///------------------------------------------------  BuildWidget Section -------------------------------------///
@@ -73,9 +73,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       key: _scaffoldStateKey,
       appBar: AppBar(
-        backgroundColor: Color(colorBackground),
+        backgroundColor: CColors.colorBackground,
       ),
-      backgroundColor: Color(colorBackground),
+      backgroundColor: CColors.colorBackground,
       body: ListView(
         children: <Widget>[
           buildHeaderTitle(),
@@ -130,7 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: _imageProfile == null
                               ? Text(
                                   "Please attach your image to set as profile picture.",
-                                  style: _styleTextFormFiled,
+                                  style: Style.styleTextFormFiled,
                                 )
                               : Text(
                                   "Profile Image Selected",
@@ -143,7 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     )),
               ),
               SizedBox(
-                height: 15,
+                height: 10,
               ),
               ///////////////////////////////
               ///   Username TextFiled   ///
@@ -159,15 +159,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     return null;
                 },
                 decoration: InputDecoration(
-                  focusedBorder: _borderTextFormFiled,
-                  enabledBorder: _borderTextFormFiled,
+                  focusedBorder: Style.borderTextFormFiled,
+                  enabledBorder: Style.borderTextFormFiled,
                   fillColor: Colors.white,
                   prefixIcon: Icon(
                     Icons.person_outline,
                     color: Colors.white,
                   ),
                   labelText: 'Username',
-                  labelStyle: _styleTextFormFiled,
+                  labelStyle: Style.styleTextFormFiled,
                 ),
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -177,7 +177,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               SizedBox(
-                height: 15,
+                height: 10,
               ),
               ////////////////////////////////
               ///   Full Name TextFiled   ///
@@ -194,15 +194,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     return null;
                 },
                 decoration: InputDecoration(
-                  focusedBorder: _borderTextFormFiled,
-                  enabledBorder: _borderTextFormFiled,
+                  focusedBorder: Style.borderTextFormFiled,
+                  enabledBorder: Style.borderTextFormFiled,
                   fillColor: Colors.white,
                   prefixIcon: Icon(
                     Icons.format_color_text,
                     color: Colors.white,
                   ),
                   labelText: 'Full Name',
-                  labelStyle: _styleTextFormFiled,
+                  labelStyle: Style.styleTextFormFiled,
                 ),
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
@@ -212,43 +212,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               SizedBox(
-                height: 15,
+                height: 10,
               ),
               ////////////////////////////////////
               ///   Your Location TextFiled   ///
               //////////////////////////////////
-              TextFormField(
-                focusNode: _yourLocationFocus,
-                onSaved: (yourLocation) {
-                  _yourLocation = yourLocation;
-                },
-                validator: (yourLocation) {
-                  if (yourLocation.length == 0)
-                    return 'Must Not Empty!';
-                  else
-                    return null;
-                },
-                maxLines: 2,
-                decoration: InputDecoration(
-                  focusedBorder: _borderTextFormFiled,
-                  enabledBorder: _borderTextFormFiled,
-                  fillColor: Colors.white,
-                  prefixIcon: Icon(
-                    Icons.home,
-                    color: Colors.white,
-                  ),
-                  labelText: 'Your Location',
-                  labelStyle: _styleTextFormFiled,
-                ),
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (term) {
-                  FocusScope.of(context).requestFocus(_emailFocus);
-                },
-                style: TextStyle(color: Colors.white),
-              ),
+              _locationPikerWidget(),
               SizedBox(
-                height: 15,
+                height: 10,
               ),
               ///////////////////////////////
               ///   Email TextFiled   ///
@@ -269,15 +240,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     return null;
                 },
                 decoration: InputDecoration(
-                  focusedBorder: _borderTextFormFiled,
-                  enabledBorder: _borderTextFormFiled,
+                  focusedBorder: Style.borderTextFormFiled,
+                  enabledBorder: Style.borderTextFormFiled,
                   fillColor: Colors.white,
                   prefixIcon: Icon(
                     Icons.mail_outline,
                     color: Colors.white,
                   ),
                   labelText: 'Email',
-                  labelStyle: _styleTextFormFiled,
+                  labelStyle: Style.styleTextFormFiled,
                 ),
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
@@ -287,7 +258,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               SizedBox(
-                height: 15,
+                height: 10,
               ),
               ////////////////////////////
               ///  Password TextFiled  ///
@@ -306,14 +277,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   }
                 },
                 decoration: InputDecoration(
-                  focusedBorder: _borderTextFormFiled,
-                  enabledBorder: _borderTextFormFiled,
+                  focusedBorder: Style.borderTextFormFiled,
+                  enabledBorder: Style.borderTextFormFiled,
                   prefixIcon: Icon(
                     Icons.lock_outline,
                     color: Colors.white,
                   ),
                   labelText: 'Password',
-                  labelStyle: _styleTextFormFiled,
+                  labelStyle: Style.styleTextFormFiled,
                 ),
                 keyboardType: TextInputType.text,
                 style: TextStyle(color: Colors.white),
@@ -419,14 +390,87 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ));
   }
 
+  _locationPikerWidget() {
+    return Column(
+      children: <Widget>[
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Location",
+            style: Style.styleTextFormFiled,
+            textAlign: TextAlign.left,
+          ),
+        ),
+        InkWell(
+          onTap: () async {
+            final selected =
+                await showSearch(context: context, delegate: SearchLocation());
+//            print("hhhhh===${jsonDecode(selected)['Title']}");
+            setState(() {
+              if (selected.isEmpty) {
+                _yourCity = _yourCityDefault;
+                _yourState = _yourStateDefault;
+              } else {
+                _yourCity = jsonDecode(selected)['Title'];
+                _yourState = jsonDecode(selected)['SubTitle'];
+              }
+            });
+//            print(selected.toString());
+          },
+          child: Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(top: 10),
+            decoration: UnderlineTabIndicator(
+                borderSide: BorderSide(color: Colors.white)),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 13, right: 10),
+                    child: Icon(
+                      Icons.location_on,
+                      color: Colors.white,
+                    ),
+                  ),
+                  //cityChoose
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        "$_yourCity ",
+                        style: Style.styleTextFormFiled,
+                      ),
+                      Text(
+                        "$_yourState",
+                        style: Style.styleTextSubTitleSignUp,
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
   ///------------------------------------------------  Method  Section -------------------------------------///
   Future _validateInputs() async {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       _formKey.currentState.save();
       if (_agreeTerms == true) {
-        //If Sign Up Successfully
-        signUp();
+        if (_imageProfile != null) {
+          //If Sign Up Successfully
+          if (_yourState.isNotEmpty) {
+            signUp();
+          } else {
+            showSnackBarLocationNotChoose();
+          }
+        } else {
+          showSnackBarWarningImage();
+        }
       } else {
         // If user not Agree Terms
         showSnackBarNotAgreeTerms();
@@ -446,19 +490,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (user != null) {
         try {
           widget.auth.createUsers(
-            profilePicture: _imageProfile,
+              profilePicture: _imageProfile,
               userUid: user,
               username: _username,
               fullName: _fullName,
-              yourLocation: _yourLocation,
+              yourCity: _yourCity,
+              yourState: _yourState,
               email: _email);
           resetDefault();
-          Timer(Duration(milliseconds: 1000), () {
+          Timer(Duration(milliseconds: 700), () {
             goToSignIn();
           });
           showSnackBarSuccess();
         } catch (e) {
-          print("erooooooor======$e");
+//          print("erooooooor======$e");
         }
       }
     } catch (e) {
@@ -482,6 +527,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
   showSnackBarNotAgreeTerms() {
     SnackBar snackBar = SnackBar(
       content: Text("Agree With Terms First"),
+      backgroundColor: Colors.red,
+      duration: Duration(milliseconds: 1000),
+    );
+    _scaffoldStateKey.currentState.showSnackBar(snackBar);
+  }
+
+  ///  // Show Error message when not agree with terms
+  showSnackBarLocationNotChoose() {
+    SnackBar snackBar = SnackBar(
+      content: Text("Choose Location First"),
+      backgroundColor: Colors.red,
+      duration: Duration(milliseconds: 1000),
+    );
+    _scaffoldStateKey.currentState.showSnackBar(snackBar);
+  }
+
+  /// Show Error message when not agree with terms
+  showSnackBarWarningImage() {
+    SnackBar snackBar = SnackBar(
+      content: Text("Please choose Image"),
       backgroundColor: Colors.red,
       duration: Duration(milliseconds: 1000),
     );
@@ -521,7 +586,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _viewTerms() {
-  Navigator.push(context, MaterialPageRoute(builder: (_)=>TermsScreen()));
-
+    Navigator.push(context, MaterialPageRoute(builder: (_) => TermsScreen()));
   }
 }
