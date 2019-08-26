@@ -183,8 +183,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (_formKey.currentState.validate()) {
       // If all data are correct then save data to out variables
       _formKey.currentState.save();
-      //todo when success
-
       try {
         await widget.auth.resetPassword(email: _email);
         _showSnackBarSuccess();

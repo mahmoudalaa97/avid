@@ -40,7 +40,7 @@ class SearchLocation extends SearchDelegate<String> {
 
   @override
   Widget buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
+    // implement buildLeading
     return IconButton(
       icon: AnimatedIcon(
         icon: AnimatedIcons.menu_arrow,
@@ -54,7 +54,7 @@ class SearchLocation extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
+    // implement buildResults
 
     return Container(
       color: Colors.red,
