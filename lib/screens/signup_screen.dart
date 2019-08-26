@@ -512,6 +512,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   validateFireBaseError(e) {
+    print(e.code);
     switch (e.code) {
       case 'ERROR_EMAIL_ALREADY_IN_USE':
         _scaffoldStateKey.currentState.showSnackBar(SnackBar(
