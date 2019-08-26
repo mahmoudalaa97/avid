@@ -26,6 +26,7 @@ class _TermsScreenState extends State<TermsScreen> {
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
           _webViewController = webViewController;
+          print(_webViewController);
           _loadHtmlFromAssets();
         },
       ),
