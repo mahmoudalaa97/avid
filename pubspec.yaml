@@ -31,6 +31,7 @@ dependencies:
   flutter_google_places: 0.2.3
   shared_preferences: 0.4.3
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
