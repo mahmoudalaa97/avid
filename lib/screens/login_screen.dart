@@ -5,7 +5,7 @@ import 'forgot_password_screen.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({this.auth, this.onSignedIn,this.onSignedUp});
+  LoginScreen({this.auth, this.onSignedIn, this.onSignedUp});
 
   final BaseAuth auth;
   final VoidCallback onSignedIn;
@@ -17,8 +17,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   ///------------------------------------------------  Parameters Section -------------------------------------///
-
-
 
   // To Jump Next TextFormField Password
   FocusNode _passwordFocus = FocusNode();
@@ -92,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 decoration: InputDecoration(
                   focusedBorder: Style.borderTextFormFiled,
-                  enabledBorder:  Style.borderTextFormFiled,
+                  enabledBorder: Style.borderTextFormFiled,
                   fillColor: Colors.white,
                   prefixIcon: Icon(
                     Icons.person_outline,
@@ -191,7 +189,12 @@ class _LoginScreenState extends State<LoginScreen> {
     return FlatButton(
         padding: EdgeInsets.all(0),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (_)=>ForgotPasswordScreen(auth: Auth(),)));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => ForgotPasswordScreen(
+                        auth: Auth(),
+                      )));
         },
         child: Text(
           "FORGOT LOG IN ?",
@@ -242,31 +245,44 @@ class _LoginScreenState extends State<LoginScreen> {
 
   ///------------------------------------------------  Method  Section -------------------------------------///
   goToSignUpScreen() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => SignUpScreen(
-      auth: widget.auth,
-      onSignedUp: widget.onSignedUp,
-
-    )));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => SignUpScreen(
+              auth: widget.auth,
+              onSignedUp: widget.onSignedUp,
+            )));
     _formKey.currentState.reset();
     setState(() {
-      _autoValidate=false;
+      _autoValidate = false;
     });
   }
 
   /// Sign In and handel Error
-  signIn(){
-  return widget.auth.signInWithEmailAndPassword(_email, _password);
+  signIn() {
+    return widget.auth.signInWithEmailAndPassword(_email, _password);
   }
+
   validateFireBaseError() async {
     try {
-     String user= await widget.auth.signInWithEmailAndPassword(_email, _password);
-     if(user!=null) {
-       widget.onSignedIn();
-     }
+      String user =
+          await widget.auth.signInWithEmailAndPassword(_email, _password);
+      if (user != null) {
+        widget.onSignedIn();
+      }
     } catch (e) {
       print(e.code);
       switch (e.code) {
+        case 'ERROR_NETWORK_REQUEST_FAILED':
+          _scaffoldStateKey.currentState.showSnackBar(SnackBar(
+            content: Text("Check Network"),
+            action: SnackBarAction(
+              label: "Fix",
+              onPressed: () {},
+              textColor: Colors.greenAccent,
+            ),
+            duration: Duration(milliseconds: 2000),
+            backgroundColor: Colors.blueGrey,
+          ));
+          break;
         case 'ERROR_WRONG_PASSWORD':
           _scaffoldStateKey.currentState.showSnackBar(SnackBar(
             content: Text("Cheack Email or Password"),

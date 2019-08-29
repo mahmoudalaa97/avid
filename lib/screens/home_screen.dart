@@ -1,6 +1,9 @@
 import 'package:avid/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
+import 'create_post_screen.dart';
+GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 class HomeScreen extends StatelessWidget {
   ///------------------------------------------------  Parameters Section -------------------------------------///
   // black Color For BackGround
@@ -14,21 +17,23 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Color(colorBackground),
         title: Text("Avid."),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.exit_to_app), onPressed: _signOut)
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text("Welcome to home screen"),
-            RaisedButton(
-              child: Text("SIGN OUT"),
-              onPressed: _signOut,
-            )
-          ],
+          children: <Widget>[],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addPost,
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -39,5 +44,9 @@ class HomeScreen extends StatelessWidget {
       await auth.signOut();
       onSignedOut();
     } catch (e) {}
+  }
+
+  void _addPost() {
+    Navigator.push(_scaffoldKey.currentContext, MaterialPageRoute(builder: (_)=>CreatePostScreen()));
   }
 }

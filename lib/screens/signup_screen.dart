@@ -4,7 +4,7 @@ import 'dart:convert';
 
 import 'package:avid/screens/terms_screen.dart';
 import 'package:avid/services/auth.dart';
-import 'package:avid/utils/search_location.dart';
+import 'package:avid/screens/search_location_screen.dart';
 import 'package:avid/utils/style.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,9 +24,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   // To Jump Next TextFormField Full Name
   FocusNode _fullNameFocus = FocusNode();
-
-  // To Jump Next TextFormField Your Location
-  FocusNode _yourLocationFocus = FocusNode();
 
   // To Jump Next TextFormField Email
   FocusNode _emailFocus = FocusNode();
@@ -53,10 +50,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _fullName;
 
   // To Save Your Location Here
-  String _yourCity = "Select location";
-  String _yourCityDefault = "Select location";
+  String _yourCity = "";
   String _yourState = "";
-  String _yourStateDefault = "";
 
   // To Save Email Here
   String _email;
@@ -206,9 +201,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: (term) {
-                  FocusScope.of(context).requestFocus(_yourLocationFocus);
-                },
                 style: TextStyle(color: Colors.white),
               ),
               SizedBox(
@@ -403,14 +395,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
         InkWell(
           onTap: () async {
-            final selected =
-                await showSearch(context: context, delegate: SearchLocation());
+            final selected = await showSearch(
+                context: context, delegate: SearchLocationScreen());
 //            print("hhhhh===${jsonDecode(selected)['Title']}");
             setState(() {
-              if (selected.isEmpty) {
-                _yourCity = _yourCityDefault;
-                _yourState = _yourStateDefault;
-              } else {
+              if (selected.isNotEmpty) {
                 _yourCity = jsonDecode(selected)['Title'];
                 _yourState = jsonDecode(selected)['SubTitle'];
               }
@@ -432,16 +421,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Icons.location_on,
                       color: Colors.white,
                     ),
-                  ),
-                  //cityChoose
+                  ), //cityChoose
                   Row(
                     children: <Widget>[
                       Text(
-                        "$_yourCity ",
+                        _yourCity.isEmpty ? "Select location" : "$_yourCity",
                         style: Style.styleTextFormFiled,
                       ),
                       Text(
-                        "$_yourState",
+                        " ,$_yourState",
                         style: Style.styleTextSubTitleSignUp,
                       )
                     ],

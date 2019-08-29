@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class Style {
   //  Style to Text using in TextFormFiled
@@ -24,6 +23,15 @@ class Style {
 
   // Style to Text SubTitle using in ListTile
   static const TextStyle styleSubTitleSearchLocation = TextStyle(fontSize: 11);
+
+//-------------- Create Post Screen ---------------//
+  static const TextStyle styleTextCreatePost =
+      TextStyle(color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w400);
+  static const TextStyle styleTextSubTitleCreatePost =
+      TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w400);
+  static const  TextStyle chooseStyleCreatePost = TextStyle(color: Colors.white,fontWeight: FontWeight.bold);
+  static const  TextStyle defaultValueStyleCreatePost= TextStyle(color: Colors.black,fontWeight: FontWeight.bold);
+
 }
 
 class CColors {
@@ -34,5 +42,8 @@ class CColors {
 
   // white Color For Text
   static const white = Colors.white;
-}
 
+//-------------- Create Post Screen ---------------//
+  static const Color chooseColorCreatePost = Colors.black;
+  static const Color defaultValueColorCraetePost = Colors.white70;
+}

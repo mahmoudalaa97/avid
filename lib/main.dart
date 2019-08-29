@@ -1,7 +1,5 @@
-
 import 'package:avid/services/auth.dart';
 import 'package:flutter/material.dart';
-
 
 import 'services/root_page.dart';
 
@@ -14,11 +12,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Avid',
       debugShowCheckedModeBanner: false,
-      home:RootPage(auth: Auth(),),
+      home: RootPage(
+        auth: Auth(),
+      ),
     );
   }
-
 }
-
-
-
