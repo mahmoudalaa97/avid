@@ -121,20 +121,23 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: _scaffoldStateKey,
-        appBar: AppBar(
-          title: Text("Create Post"),
-        ),
-        backgroundColor: Color(0xfff2f4f6),
-        body: PageView(
-          controller: _pageController,
-          physics: NeverScrollableScrollPhysics(),
-          children: <Widget>[
-            _buildBodyPage1(),
-            _buildBodyPage2(),
-          ],
-        ));
+    return WillPopScope(
+      onWillPop: _backButtonHandel,
+      child: Scaffold(
+          key: _scaffoldStateKey,
+          appBar: AppBar(
+            title: Text("Create Post"),
+          ),
+          backgroundColor: Color(0xfff2f4f6),
+          body: PageView(
+            controller: _pageController,
+            physics: NeverScrollableScrollPhysics(),
+            children: <Widget>[
+              _buildBodyPage1(),
+              _buildBodyPage2(),
+            ],
+          )),
+    );
   }
 
   //------------------------------------------------  Widget Section -------------------------------------//
@@ -1417,8 +1420,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           print("Error==$e");
         }
       } else {
-        _scaffoldStateKey.currentState.showSnackBar(
-            SnackBar(content: Text("Must select 1 Picture")));
+        _scaffoldStateKey.currentState
+            .showSnackBar(SnackBar(content: Text("Must select 1 Picture")));
       }
     } else {
       // If all data are not valid then start auto validation.
@@ -1455,5 +1458,26 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
     Navigator.pop(context);
     Timer(Duration(milliseconds: 800), () => Navigator.pop(context));
+  }
+
+  Future<bool> _backButtonHandel() {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (cb) =>
+            AlertDialog(
+              title: Text("AVid"),
+              content: Text("All changes will be lost.Do you want to go back?"),
+              actions: <Widget>[
+                FlatButton(child: Text("NO"),
+                  onPressed: () => Navigator.of(cb).pop(false)
+                  ,),
+                FlatButton(child: Text("YES"),
+                  onPressed: () => Navigator.of(cb).pop(true)
+                  ,)
+              ],
+            )
+    ) ??
+        false;
   }
 }
