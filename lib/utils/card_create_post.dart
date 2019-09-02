@@ -6,9 +6,10 @@ class CardCreatePost extends StatelessWidget {
   final Widget content;
   final bool error;
   final String errorMessage;
+  final TextStyle textStyle;
 
   CardCreatePost(
-      {@required this.onClick, this.title="", this.content, this.error = false ,this.errorMessage=""});
+      { this.onClick, this.title = "", this.content, this.error = false, this.errorMessage = "", this.textStyle});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class CardCreatePost extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            color: Color(0xfff5f5f5), borderRadius: BorderRadius.circular(8)),
+            borderRadius: BorderRadius.circular(8)),
         child: Column(
           children: <Widget>[
             Row(
@@ -27,7 +28,10 @@ class CardCreatePost extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "$title",
-                      style: TextStyle(color: Color(0xff24253D)),
+                      style: textStyle == null ? TextStyle(
+                          color: Color(0xff24253D),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12) : textStyle,
                     )),
                 error
                     ? Align(

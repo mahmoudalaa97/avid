@@ -26,11 +26,13 @@ class Style {
 
 //-------------- Create Post Screen ---------------//
   static const TextStyle styleTextCreatePost =
-      TextStyle(color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w400);
+  TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.w400);
   static const TextStyle styleTextSubTitleCreatePost =
-      TextStyle(color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w400);
-  static const  TextStyle chooseStyleCreatePost = TextStyle(color: Colors.white,fontWeight: FontWeight.bold);
-  static const  TextStyle defaultValueStyleCreatePost= TextStyle(color: Colors.black,fontWeight: FontWeight.bold);
+  TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w400);
+  static const TextStyle chooseStyleCreatePost = TextStyle(
+      color: Colors.white, fontWeight: FontWeight.w500, fontSize: 15);
+  static const TextStyle defaultValueStyleCreatePost = TextStyle(
+      color: Colors.black87, fontWeight: FontWeight.w500, fontSize: 15);
 
 }
 

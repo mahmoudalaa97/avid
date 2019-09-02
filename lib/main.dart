@@ -12,6 +12,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Avid',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: Color(0xff333333),
+      ),
       home: RootPage(
         auth: Auth(),
       ),

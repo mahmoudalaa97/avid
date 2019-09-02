@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:avid/screens/terms_screen.dart';
 import 'package:avid/services/auth.dart';
 import 'package:avid/screens/search_location_screen.dart';
+import 'package:avid/services/database.dart';
 import 'package:avid/utils/style.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,6 +14,7 @@ class SignUpScreen extends StatefulWidget {
   SignUpScreen({this.auth, this.onSignedUp});
 
   final BaseAuth auth;
+  final BaseDatabase database = Database();
   final VoidCallback onSignedUp;
 
   @override
@@ -477,7 +479,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           await widget.auth.createUserWithEmailAndPassword(_email, _password);
       if (user != null) {
         try {
-          widget.auth.createUsers(
+          widget.database.createUsers(
               profilePicture: _imageProfile,
               userUid: user,
               username: _username,
@@ -571,6 +573,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         source: ImageSource.gallery, maxHeight: 500, maxWidth: 500);
     setState(() {
       _imageProfile = image;
+      print(_imageProfile);
     });
   }
 
