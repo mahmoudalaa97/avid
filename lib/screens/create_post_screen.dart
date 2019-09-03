@@ -63,9 +63,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     'No It Isn\'t',
   ];
   String _listingTypeText;
-  String _joinVentureTypeText;
-  String _bringMeADealTypeText;
   bool _listingTypeError = false;
+  String _joinVentureTypeText;
+  bool _joinVentureTypeError = false;
+  String _bringMeADealTypeText;
+  bool _bringMeADealTypeError = false;
+
+
 
   // To Save Your Property Type
   String _propertyTypeText;
@@ -169,9 +173,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             SizedBox(height: 10),
             _listingTypeWidget(),
             SizedBox(height: 10),
+            _jointVentureWidget(),
+            _bringMeADealWidget(),
             _propertyTypeWidget(),
             SizedBox(height: 10),
-            _isTheTurnkeyListing(),
+            _isTheTurnkeyListingWidget(),
             SizedBox(height: 10),
             _buttonNextWidget(),
             SizedBox(height: 10),
@@ -432,7 +438,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     );
   }
 
-  Widget _isTheTurnkeyListing() {
+  Widget _isTheTurnkeyListingWidget() {
     return CardCreatePost(
       title: "Is This A Turnkey Listing?",
       errorMessage: 'Please Choose Trurnkey',
@@ -473,6 +479,107 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _jointVentureWidget() {
+    //TODO HERE VISIBILITY WHEN NOT CHOOSE JOINT
+    return Visibility(
+      visible: _listingTypeText == listOfListing[2] ? true : false,
+      child: CardCreatePost(
+        title: "Join Venture Type",
+        errorMessage: 'Please Choose Join Venture Type',
+        error: _joinVentureTypeError,
+        onClick: () {
+          _jointVentureTypeModalBottomSheet(context);
+        },
+        content: Column(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(top: 10),
+              decoration: UnderlineTabIndicator(
+                  borderSide: BorderSide(color: Colors.grey)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 5),
+                      child: Icon(
+                        Icons.vpn_key,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    //cityChoose
+                    Text(
+                      _joinVentureTypeText == null
+                          ? "Choose Joint Venture"
+                          : "$_joinVentureTypeText",
+                      style: Style.styleTextCreatePost,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _bringMeADealWidget() {
+    return Visibility(
+      visible: _joinVentureTypeText == listOfJoinVentureType[2] ? true : false,
+      replacement: Container(),
+      child: Container(
+        margin: EdgeInsets.only(top: 10, bottom: 10),
+        child: CardCreatePost(
+          title: "Bring Me A Deal",
+          errorMessage: 'Please Choose Bring Me A Deal',
+          error: _bringMeADealTypeError,
+          onClick: () {
+            _bringMeADealTypeModalBottomSheet(context);
+          },
+          content: Column(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.centerLeft,
+                margin: EdgeInsets.only(top: 10),
+                decoration: UnderlineTabIndicator(
+                    borderSide: BorderSide(color: Colors.grey)),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 5),
+                        child: Icon(
+                          Icons.vpn_key,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      //cityChoose
+                      Text(
+                        _bringMeADealTypeText == null
+                            ? "Choose Bring Me A Deal"
+                            : "$_bringMeADealTypeText",
+                        style: Style.styleTextCreatePost,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -1107,11 +1214,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                             context);
                                         _joinVentureTypeText =
                                         listOfJoinVentureType[index];
+                                        _joinVentureTypeError = false;
                                         break;
                                       default:
                                         _joinVentureTypeText =
                                         listOfJoinVentureType[index];
-                                        _listingTypeError = false;
+                                        _joinVentureTypeError = false;
                                         Navigator.pop(context);
                                         break;
                                     }
@@ -1170,7 +1278,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                     } else {
                                       _bringMeADealTypeText =
                                       listOfBringMeADeal[index];
-                                      _listingTypeError = false;
+                                      _bringMeADealTypeError = false;
                                       Navigator.pop(context);
                                     }
                                   });
@@ -1255,6 +1363,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         _squareFootageVisibility = true;
         _acresVisibility = true;
         _units = null;
+        _unitsVisibility = false;
       } else if (_propertyTypeText == listOfPropertyType[1] ||
           _propertyTypeText == listOfPropertyType[2] ||
           _propertyTypeText == listOfPropertyType[3] ||
@@ -1324,9 +1433,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
       if (_listingTypeText == listOfListing[2] &&
           _joinVentureTypeText == null) {
-        _listingTypeError = true;
+        _joinVentureTypeError = true;
       } else {
-        _listingTypeError = false;
+        _joinVentureTypeError = false;
+      }
+      if (_listingTypeText == listOfListing[2] &&
+          _joinVentureTypeText == listOfJoinVentureType[2] &&
+          _bringMeADealTypeText == null) {
+        _bringMeADealTypeError = true;
+      } else {
+        _bringMeADealTypeError = false;
       }
 
 //      if (_joinVentureTypeText == listOfJoinVentureType[2] &&
@@ -1339,7 +1455,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     if (!_listingTypeError &&
         !_locationError &&
         !_propertyTypeError &&
-        !_turnkeyListingError) {
+        !_turnkeyListingError &&
+        !_joinVentureTypeError &&
+        !_bringMeADealTypeError) {
       return true;
     } else {
       _scaffoldStateKey.currentState.showSnackBar(SnackBar(
@@ -1460,24 +1578,33 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     Timer(Duration(milliseconds: 800), () => Navigator.pop(context));
   }
 
-  Future<bool> _backButtonHandel() {
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (cb) =>
-            AlertDialog(
-              title: Text("AVid"),
-              content: Text("All changes will be lost.Do you want to go back?"),
-              actions: <Widget>[
-                FlatButton(child: Text("NO"),
-                  onPressed: () => Navigator.of(cb).pop(false)
-                  ,),
-                FlatButton(child: Text("YES"),
-                  onPressed: () => Navigator.of(cb).pop(true)
-                  ,)
-              ],
-            )
-    ) ??
-        false;
+  Future<bool> _backButtonHandel() async {
+    if (_pageController.page == 0) {
+      return showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (cb) =>
+              AlertDialog(
+                title: Text("AVid"),
+                content: Text(
+                    "All changes will be lost.Do you want to go back?"),
+                actions: <Widget>[
+                  FlatButton(child: Text("NO"),
+                    onPressed: () => Navigator.of(cb).pop(false)
+                    ,),
+                  FlatButton(child: Text("YES"),
+                    onPressed: () => Navigator.of(cb).pop(true)
+                    ,)
+                ],
+              )
+      ) ??
+          false;
+    } else {
+      _pageController.previousPage(
+          duration: Duration(milliseconds: 500), curve: SawTooth(1));
+
+      return false;
+    }
+
   }
 }
