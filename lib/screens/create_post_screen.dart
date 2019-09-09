@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:avid/model/Post.dart';
+import 'package:avid/model/User.dart';
 import 'package:avid/services/auth.dart';
 import 'package:avid/services/database.dart';
 import 'package:avid/utils/card_create_post.dart';
 import 'package:avid/utils/style.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -484,7 +486,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   }
 
   Widget _jointVentureWidget() {
-    //TODO HERE VISIBILITY WHEN NOT CHOOSE JOINT
     return Visibility(
       visible: _listingTypeText == listOfListing[2] ? true : false,
       child: CardCreatePost(
@@ -1508,11 +1509,14 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         _showAlertLoading();
         try {
           String userId = await auth.currentUser();
+          DataSnapshot dataSnapshot = await _getUser(userId);
+          print(dataSnapshot.value);
           var pictureList = await widget.database
               .uploadPostPicture(picturesList: _imagesList);
           try {
             widget.database.createPost(
                 post: Post(
+                    user: User.fromSnapshotJson(dataSnapshot),
                     userId: userId,
                     location:
                     Location(city: _yourCityText, state: _yourStateText),
@@ -1528,8 +1532,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         squareFootage: _squareFootage,
                         price: _price,
                         turnkeyPrice: _turnkeyPrice,
-                        bathRoom: _bathRoomNumber.toString(),
-                        bedRoom: _bedRoomNumber.toString(),
+                        bathRoom: _bathRoomNumber == 0 ? null : _bathRoomNumber
+                            .toString(),
+                        bedRoom: _bedRoomNumber == 0 ? null : _bedRoomNumber
+                            .toString(),
                         description: _description)));
 
             _postSuccessfully();
@@ -1605,6 +1611,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
       return false;
     }
+  }
 
+  Future<DataSnapshot> _getUser(String uid) async {
+    DataSnapshot dataSnapshot = await widget.database.getUser(uid);
+    return dataSnapshot;
   }
 }
+
+

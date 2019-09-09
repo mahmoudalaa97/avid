@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:avid/model/User.dart';
 import 'package:avid/screens/terms_screen.dart';
 import 'package:avid/services/auth.dart';
 import 'package:avid/screens/search_location_screen.dart';
@@ -480,13 +481,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (user != null) {
         try {
           widget.database.createUsers(
-              profilePicture: _imageProfile,
-              userUid: user,
-              username: _username,
-              fullName: _fullName,
-              yourCity: _yourCity,
-              yourState: _yourState,
-              email: _email);
+            profilePicture: _imageProfile,
+            user: User(
+                userUid: user,
+                username: _username,
+                fullName: _fullName,
+                yourLocation: YourLocation(
+                  city: _yourCity,
+                  state: _yourState,
+                ),
+                email: _email),
+          );
           resetDefault();
           Timer(Duration(milliseconds: 700), () {
             goToSignIn();

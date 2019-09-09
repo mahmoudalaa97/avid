@@ -3,6 +3,7 @@ import 'package:avid/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'auth.dart';
+import 'database.dart';
 
 class RootPage extends StatefulWidget {
   RootPage({this.auth});
@@ -61,6 +62,7 @@ class _RootPageState extends State<RootPage> {
         return HomeScreen(
           auth: widget.auth,
           onSignedOut: _signedOut,
+          database: Database(),
         );
       default:
         return Container();
