@@ -12,6 +12,7 @@ class ViewPostScreen extends StatefulWidget {
   _ViewPostScreenState createState() => _ViewPostScreenState();
 }
 
+
 class _ViewPostScreenState extends State<ViewPostScreen> {
   FirebaseDatabase _database = FirebaseDatabase.instance;
   DatabaseReference _reference;
