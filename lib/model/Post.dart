@@ -19,6 +19,7 @@ class Post {
   String turnkeyListing;
   String userId;
   User user;
+  String dateTime;
 
   Post({
     this.user,
@@ -31,10 +32,12 @@ class Post {
     this.propertyType,
     this.turnkeyListing,
     this.userId,
+    this.dateTime
   });
 
   factory Post.fromJson(Map<String, dynamic> json) =>
       new Post(
+        dateTime: json["DateTime"],
         bringMeADeal: json["BringMeADeal"],
         details: Details.fromJson(json["Details"]),
         joinVentureType: json["JoinVentureType"],
@@ -47,6 +50,7 @@ class Post {
 
   Post.fromSnapshotJson(DataSnapshot snapshot) {
     key = snapshot.key;
+    dateTime = snapshot.value["DateTime"];
     bringMeADeal = snapshot.value["BringMeADeal"];
     joinVentureType = snapshot.value["JoinVentureType"];
     listingType = snapshot.value["ListingType"];
@@ -59,7 +63,7 @@ class Post {
 
   Map<String, dynamic> toJson() =>
       {
-        "user": user.toJson(),
+        "DateTime": dateTime,
         "BringMeADeal": bringMeADeal,
         "Details": details.toJson(),
         "JoinVentureType": joinVentureType,

@@ -1516,6 +1516,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           try {
             widget.database.createPost(
                 post: Post(
+                    dateTime: "${DateTime.now()}",
                     user: User.fromSnapshotJson(dataSnapshot),
                     userId: userId,
                     location:

@@ -8,20 +8,27 @@ class CardViewPost extends StatefulWidget {
   final int index;
 
   CardViewPost(
-      {this.post,
-      this.timesPost = "24 days ago",
-      this.favorite = true,
-      this.index = 0});
+      {this.post, this.timesPost, this.favorite = true, this.index = 0});
 
   @override
   _CardViewPostState createState() => _CardViewPostState();
 }
 
 class _CardViewPostState extends State<CardViewPost> {
-  final Post post = Post();
-
   @override
   Widget build(BuildContext context) {
+    int differenceMinutes = DateTime
+        .now()
+        .difference(DateTime.parse(widget.post.dateTime))
+        .inMinutes;
+    int differenceHours = DateTime
+        .now()
+        .difference(DateTime.parse(widget.post.dateTime))
+        .inHours;
+    int differenceDays = DateTime
+        .now()
+        .difference(DateTime.parse(widget.post.dateTime))
+        .inDays;
     return Container(
       margin: EdgeInsets.only(left: 3, right: 3, top: 5, bottom: 5),
       decoration: BoxDecoration(
@@ -43,7 +50,7 @@ class _CardViewPostState extends State<CardViewPost> {
                       image: DecorationImage(
                           fit: BoxFit.fill,
                           image:
-                              NetworkImage(widget.post.user.profilePicture))),
+                          NetworkImage(widget.post.user.profilePicture))),
                 ),
                 Expanded(
                   child: Container(
@@ -64,9 +71,18 @@ class _CardViewPostState extends State<CardViewPost> {
                           child: Row(
                             children: <Widget>[
                               Text(
-                                widget.timesPost,
+                                widget.post.dateTime != null
+                                    ? differenceMinutes < 60
+                                    ? "$differenceMinutes Minutes"
+                                    : differenceMinutes >= 60 &&
+                                    differenceMinutes < 1440
+                                    ? "$differenceHours Hours"
+                                    : differenceMinutes >= 1440 &&
+                                    differenceMinutes <= 40320
+                                    ? "$differenceDays Days"
+                                    : "${differenceDays ~/ 28} Months" : "",
                                 style:
-                                    TextStyle(color: Colors.grey, fontSize: 13),
+                                TextStyle(color: Colors.grey, fontSize: 13),
                               ),
                               SizedBox(
                                 width: 10,
@@ -79,7 +95,8 @@ class _CardViewPostState extends State<CardViewPost> {
                                 width: 5,
                               ),
                               Text(
-                                  "${widget.post.location.city}, ${widget.post.location.state}")
+                                  "${widget.post.location.city}, ${widget.post
+                                      .location.state}")
                             ],
                           ),
                         )
@@ -89,14 +106,14 @@ class _CardViewPostState extends State<CardViewPost> {
                 ),
                 widget.favorite
                     ? Icon(
-                        Icons.favorite,
-                        size: 30,
-                        color: Colors.red,
-                      )
+                  Icons.favorite,
+                  size: 30,
+                  color: Colors.red,
+                )
                     : Icon(
-                        Icons.favorite_border,
-                        size: 30,
-                      )
+                  Icons.favorite_border,
+                  size: 30,
+                )
               ],
             ),
           ),
@@ -106,13 +123,19 @@ class _CardViewPostState extends State<CardViewPost> {
             },
             child: Container(
               height: 300,
-              width: MediaQuery.of(context).size.width,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
               child: Stack(
                 children: <Widget>[
                   Hero(
                     tag: "${widget.post.key}",
                     child: Container(
-                      width: MediaQuery.of(context).size.width,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
                       decoration: BoxDecoration(
                           image: DecorationImage(
                               image: NetworkImage(
@@ -141,19 +164,22 @@ class _CardViewPostState extends State<CardViewPost> {
         color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500);
     return Container(
       alignment: Alignment.centerLeft,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       child: Column(
         children: <Widget>[
           widget.post.details.price != null
               ? Container(
-                  alignment: Alignment.centerLeft,
-                  child: int.parse(widget.post.details.price) >= 999
-                      ? Text("\$ ${widget.post.details.price}k asking price",
-                          style: _textStyle)
-                      : Text(
-                          "\$ ${widget.post.details.price} asking price",
-                          style: _textStyle,
-                        ))
+              alignment: Alignment.centerLeft,
+              child: int.parse(widget.post.details.price) >= 999
+                  ? Text("\$ ${widget.post.details.price}k asking price",
+                  style: _textStyle)
+                  : Text(
+                "\$ ${widget.post.details.price} asking price",
+                style: _textStyle,
+              ))
               : Container(),
           Container(
               alignment: Alignment.centerLeft,
@@ -164,33 +190,33 @@ class _CardViewPostState extends State<CardViewPost> {
                 children: <Widget>[
                   widget.post.propertyType != null
                       ? Text(
-                          "${widget.post.propertyType}",
-                          style: _textStyle,
-                        )
+                    "${widget.post.propertyType}",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.turnkeyListing != null
                       ? Text(
-                          "Turnkey Listing",
-                          style: _textStyle,
-                        )
+                    "Turnkey Listing",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.listingType != null
                       ? Text(
-                          "${widget.post.listingType}",
-                          style: _textStyle,
-                        )
+                    "${widget.post.listingType}",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.joinVentureType != null
                       ? Text(
-                          "${widget.post.joinVentureType}",
-                          style: _textStyle,
-                        )
+                    "${widget.post.joinVentureType}",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.bringMeADeal != null
                       ? Text(
-                          "Bring Me A Deal",
-                          style: _textStyle,
-                        )
+                    "Bring Me A Deal",
+                    style: _textStyle,
+                  )
                       : Container(),
                 ],
               )),
@@ -202,33 +228,39 @@ class _CardViewPostState extends State<CardViewPost> {
                 children: <Widget>[
                   widget.post.details.bedRoom != null
                       ? Text(
-                          "${widget.post.details.bedRoom} bd",
-                          style: _textStyle,
-                        )
+                    "${widget.post.details.bedRoom} bd",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.details.bathRoom != null
                       ? Text(
-                          "${widget.post.details.bathRoom} ba",
-                          style: _textStyle,
-                        )
+                    "${widget.post.details.bathRoom} ba",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.details.squareFootage != null
                       ? Text(
-                          "${int.parse(widget.post.details.squareFootage) > 999 ? "${widget.post.details.squareFootage}k" : "${widget.post.details.squareFootage}"} sq",
-                          style: _textStyle,
-                        )
+                    "${int.parse(widget.post.details.squareFootage) > 999
+                        ? "${widget.post.details.squareFootage}k"
+                        : "${widget.post.details.squareFootage}"} sq",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.details.acres != null
                       ? Text(
-                          "${int.parse(widget.post.details.acres) > 999 ? "${widget.post.details.acres}k" : "${widget.post.details.acres}"} acres",
-                          style: _textStyle,
-                        )
+                    "${int.parse(widget.post.details.acres) > 999 ? "${widget
+                        .post.details.acres}k" : "${widget.post.details
+                        .acres}"} acres",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.details.units != null
                       ? Text(
-                          "${int.parse(widget.post.details.units) > 999 ? "${widget.post.details.units}k" : "${widget.post.details.units}"} units",
-                          style: _textStyle,
-                        )
+                    "${int.parse(widget.post.details.units) > 999 ? "${widget
+                        .post.details.units}k" : "${widget.post.details
+                        .units}"} units",
+                    style: _textStyle,
+                  )
                       : Container(),
                 ],
               ))
@@ -247,7 +279,9 @@ class _CardViewPostState extends State<CardViewPost> {
           child: Row(
             children: <Widget>[
               Text(
-                  "${int.parse(widget.post.details.turnkeyPrice) > 999 ? "${int.parse(widget.post.details.turnkeyPrice) / 1000}k" : "${widget.post.details.turnkeyPrice}"}/mon"),
+                  "${int.parse(widget.post.details.turnkeyPrice) > 999
+                      ? "${int.parse(widget.post.details.turnkeyPrice) / 1000}k"
+                      : "${widget.post.details.turnkeyPrice}"}/mon"),
               Icon(
                 Icons.vpn_key,
                 size: 10,
@@ -280,6 +314,18 @@ class DetailsPost extends StatefulWidget {
 class _DetailsPostState extends State<DetailsPost> {
   @override
   Widget build(BuildContext context) {
+    int differenceMinutes = DateTime
+        .now()
+        .difference(DateTime.parse(widget.post.dateTime))
+        .inMinutes;
+    int differenceHours = DateTime
+        .now()
+        .difference(DateTime.parse(widget.post.dateTime))
+        .inHours;
+    int differenceDays = DateTime
+        .now()
+        .difference(DateTime.parse(widget.post.dateTime))
+        .inDays;
     return Scaffold(
         appBar: AppBar(),
         body: Column(
@@ -322,8 +368,19 @@ class _DetailsPostState extends State<DetailsPost> {
                                   child: Row(
                                     children: <Widget>[
                                       Text(
-                                        "24 Days",
-                                        style: TextStyle(
+                                        widget.post.dateTime != null
+                                            ? differenceMinutes < 60
+                                            ? "$differenceMinutes Minutes"
+                                            : differenceMinutes >= 60 &&
+                                            differenceMinutes < 1440
+                                            ? "$differenceHours Hours"
+                                            : differenceMinutes >= 1440 &&
+                                            differenceMinutes <= 40320
+                                            ? "$differenceDays Days"
+                                            : "${differenceDays ~/ 28} Months"
+                                            : "",
+                                        style:
+                                        TextStyle(
                                             color: Colors.grey, fontSize: 13),
                                       ),
                                       SizedBox(
@@ -337,7 +394,9 @@ class _DetailsPostState extends State<DetailsPost> {
                                         width: 5,
                                       ),
                                       Text(
-                                          "${widget.post.location.city}, ${widget.post.location.state}")
+                                          "${widget.post.location
+                                              .city}, ${widget.post.location
+                                              .state}")
                                     ],
                                   ),
                                 )
@@ -347,27 +406,33 @@ class _DetailsPostState extends State<DetailsPost> {
                         ),
                         widget.favorite
                             ? Icon(
-                                Icons.favorite,
-                                size: 30,
-                                color: Colors.red,
-                              )
+                          Icons.favorite,
+                          size: 30,
+                          color: Colors.red,
+                        )
                             : Icon(
-                                Icons.favorite_border,
-                                size: 30,
-                              )
+                          Icons.favorite_border,
+                          size: 30,
+                        )
                       ],
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 5, right: 5),
                     height: 300,
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
                     child: Stack(
                       children: <Widget>[
                         Hero(
                           tag: "${widget.post.key}",
                           child: Container(
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: NetworkImage(
@@ -440,24 +505,28 @@ class _DetailsPostState extends State<DetailsPost> {
 
   _buildFooterTag() {
     TextStyle _textStyle =
-        TextStyle(color: Colors.black, fontWeight: FontWeight.w500);
+    TextStyle(color: Colors.black, fontWeight: FontWeight.w500);
     return Container(
       margin: EdgeInsets.all(10),
       alignment: Alignment.centerLeft,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       child: Column(
         children: <Widget>[
           widget.post.details.price != null
               ? Container(
-                  alignment: Alignment.centerLeft,
-                  child: int.parse(widget.post.details.price) >= 999
-                      ? Text(
-                          "\$ ${int.parse(widget.post.details.price) / 1000}k asking price",
-                          style: _textStyle)
-                      : Text(
-                          "\$ ${widget.post.details.price} asking price",
-                          style: _textStyle,
-                        ))
+              alignment: Alignment.centerLeft,
+              child: int.parse(widget.post.details.price) >= 999
+                  ? Text(
+                  "\$ ${int.parse(widget.post.details.price) /
+                      1000}k asking price",
+                  style: _textStyle)
+                  : Text(
+                "\$ ${widget.post.details.price} asking price",
+                style: _textStyle,
+              ))
               : Container(),
           Container(
               alignment: Alignment.centerLeft,
@@ -467,37 +536,37 @@ class _DetailsPostState extends State<DetailsPost> {
                 children: <Widget>[
                   widget.post.propertyType != null
                       ? Text(
-                          "${widget.post.propertyType}",
-                          style: _textStyle,
-                        )
+                    "${widget.post.propertyType}",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.turnkeyListing != null
                       ? Text(
-                          "Turnkey Listing",
-                          style: _textStyle,
-                        )
+                    "Turnkey Listing",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.listingType != null
                       ? Text(
-                          "${widget.post.listingType}",
-                          style: _textStyle,
-                        )
+                    "${widget.post.listingType}",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.joinVentureType != null
                       ? Text(
-                          "${widget.post.joinVentureType}",
-                          style: _textStyle,
-                        )
+                    "${widget.post.joinVentureType}",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.bringMeADeal != null
                       ? Text(
-                          "Bring Me A Deal",
-                          style: _textStyle,
-                        )
+                    "Bring Me A Deal",
+                    style: _textStyle,
+                  )
                       : Container(
-                          height: 0,
-                          width: 0,
-                        ),
+                    height: 0,
+                    width: 0,
+                  ),
                 ],
               )),
           Container(
@@ -508,33 +577,40 @@ class _DetailsPostState extends State<DetailsPost> {
                 children: <Widget>[
                   widget.post.details.bedRoom != null
                       ? Text(
-                          "${widget.post.details.bedRoom} bd",
-                          style: _textStyle,
-                        )
+                    "${widget.post.details.bedRoom} bd",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.details.bathRoom != null
                       ? Text(
-                          "${widget.post.details.bathRoom}ba",
-                          style: _textStyle,
-                        )
+                    "${widget.post.details.bathRoom}ba",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.details.squareFootage != null
                       ? Text(
-                          "${int.parse(widget.post.details.squareFootage) > 999 ? "${int.parse(widget.post.details.squareFootage) / 1000}k" : "${widget.post.details.squareFootage}"} sq",
-                          style: _textStyle,
-                        )
+                    "${int.parse(widget.post.details.squareFootage) > 999
+                        ? "${int.parse(widget.post.details.squareFootage) /
+                        1000}k"
+                        : "${widget.post.details.squareFootage}"} sq",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.details.acres != null
                       ? Text(
-                          "${int.parse(widget.post.details.acres) > 999 ? "${int.parse(widget.post.details.acres) / 1000}k" : "${widget.post.details.acres}"} acres",
-                          style: _textStyle,
-                        )
+                    "${int.parse(widget.post.details.acres) > 999 ? "${int
+                        .parse(widget.post.details.acres) / 1000}k" : "${widget
+                        .post.details.acres}"} acres",
+                    style: _textStyle,
+                  )
                       : Container(),
                   widget.post.details.units != null
                       ? Text(
-                          "${int.parse(widget.post.details.units) > 999 ? "${int.parse(widget.post.details.units) / 1000}k" : "${widget.post.details.units}"} units",
-                          style: _textStyle,
-                        )
+                    "${int.parse(widget.post.details.units) > 999 ? "${int
+                        .parse(widget.post.details.units) / 1000}k" : "${widget
+                        .post.details.units}"} units",
+                    style: _textStyle,
+                  )
                       : Container(),
                 ],
               )),
@@ -569,7 +645,9 @@ class _DetailsPostState extends State<DetailsPost> {
           child: Row(
             children: <Widget>[
               Text(
-                  "${int.parse(widget.post.details.turnkeyPrice) > 999 ? "${int.parse(widget.post.details.turnkeyPrice) / 1000}k" : "${widget.post.details.turnkeyPrice}"}/mon"),
+                  "${int.parse(widget.post.details.turnkeyPrice) > 999
+                      ? "${int.parse(widget.post.details.turnkeyPrice) / 1000}k"
+                      : "${widget.post.details.turnkeyPrice}"}/mon"),
               Icon(
                 Icons.vpn_key,
                 size: 10,

@@ -1,7 +1,5 @@
 import 'package:avid/model/Post.dart';
 import 'package:avid/model/User.dart';
-import 'package:avid/services/auth.dart';
-import 'package:avid/services/database.dart';
 import 'package:avid/utils/card_view_post.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -12,27 +10,31 @@ class ViewPostScreen extends StatefulWidget {
   _ViewPostScreenState createState() => _ViewPostScreenState();
 }
 
-
 class _ViewPostScreenState extends State<ViewPostScreen> {
   FirebaseDatabase _database = FirebaseDatabase.instance;
   DatabaseReference _reference;
   DatabaseReference _referenceUser;
   String nodeNamePost = "Post";
   String nodeNameUser = "Users";
-  List<Post> postsList = <Post>[];
+  List<Post> postsList = List();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    postsList.clear();
     _reference = _database.reference().child(nodeNamePost);
     _referenceUser = _database.reference().child(nodeNameUser);
     _reference.onChildAdded.listen(_childAdded);
-//    _referenceUser.onChildAdded.listen(_childAdded);
     _reference.onChildRemoved.listen(_childRemoves);
-//    _referenceUser.onChildRemoved.listen(_childRemoves);
-//    _referenceUser.onChildChanged.listen(_childChanged);
     _reference.onChildChanged.listen(_childChanged);
+
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -44,37 +46,29 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
     return Column(
       children: <Widget>[
         Flexible(
-          child: FirebaseAnimatedList(
+          child: postsList.isNotEmpty ? FirebaseAnimatedList(
               query: _reference,
-              defaultChild: Center(
-                child: CircularProgressIndicator(),
-              ),
               itemBuilder: (_, DataSnapshot snap, Animation<double> animation,
                   int index) {
-                if (postsList.isNotEmpty) {
-                  return CardViewPost(
-                    post: postsList[index],
+                return SizeTransition(
+                  sizeFactor: animation,
+                  child: CardViewPost(
+                    post: postsList[(postsList.length - 1) - index],
                     index: index,
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
-        ),
+                  ),
+                );
+              }) : Center(child: CircularProgressIndicator()),
+        )
       ],
     );
   }
 
   _childAdded(Event event) {
-    print(event.snapshot.value);
-    setState(() {
-      _referenceUser
-          .child(event.snapshot.value['UserId'])
-          .once()
-          .then((snapshot) {
-        print(snapshot.value);
+    _referenceUser
+        .child(event.snapshot.value['UserId'])
+        .once()
+        .then((snapshot) {
+      setState(() {
         Post post = Post.fromSnapshotJson(event.snapshot);
         post.user = User.fromSnapshotJson(snapshot);
         postsList.add(post);
@@ -98,16 +92,18 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
       return post.key == event.snapshot.key;
     });
 
-    setState(() {
-      _referenceUser
+
+    _referenceUser
           .child(event.snapshot.value['UserId'])
           .once()
           .then((snapshot) {
         print(snapshot.value);
-        Post post = Post.fromSnapshotJson(event.snapshot);
-        post.user = User.fromSnapshotJson(snapshot);
-        postsList[postsList.indexOf(changedPost)] = post;
+        setState(() {
+          Post post = Post.fromSnapshotJson(event.snapshot);
+          post.user = User.fromSnapshotJson(snapshot);
+          postsList[postsList.indexOf(changedPost)] = post;
+        });
+
       });
-    });
   }
 }
