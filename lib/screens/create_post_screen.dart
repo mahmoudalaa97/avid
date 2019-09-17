@@ -7,6 +7,7 @@ import 'package:avid/services/auth.dart';
 import 'package:avid/services/database.dart';
 import 'package:avid/utils/card_create_post.dart';
 import 'package:avid/utils/style.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -295,6 +296,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       onClick: () async {
         final selected = await showSearch(
             context: context, delegate: SearchLocationScreen());
+        print(selected);
         setState(() {
           if (selected.isNotEmpty) {
             _yourCityText = jsonDecode(selected)['Title'];
@@ -1509,15 +1511,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         _showAlertLoading();
         try {
           String userId = await auth.currentUser();
-          DataSnapshot dataSnapshot = await _getUser(userId);
-          print(dataSnapshot.value);
           var pictureList = await widget.database
               .uploadPostPicture(picturesList: _imagesList);
           try {
             widget.database.createPost(
                 post: Post(
-                    dateTime: "${DateTime.now()}",
-                    user: User.fromSnapshotJson(dataSnapshot),
+                    dateTime: Timestamp.now(),
                     userId: userId,
                     location:
                     Location(city: _yourCityText, state: _yourStateText),
@@ -1609,15 +1608,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     } else {
       _pageController.previousPage(
           duration: Duration(milliseconds: 500), curve: SawTooth(1));
-
       return false;
     }
   }
 
-  Future<DataSnapshot> _getUser(String uid) async {
-    DataSnapshot dataSnapshot = await widget.database.getUser(uid);
-    return dataSnapshot;
-  }
 }
 
 

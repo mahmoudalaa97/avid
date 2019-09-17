@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: Color(0xffFBF9F9),
+      backgroundColor: Color(0xffE5E5E5),
       appBar: AppBar(
         title: Text("Avid."),
         actions: <Widget>[
@@ -61,4 +61,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   database: Database(),
                 )));
   }
+
+
 }

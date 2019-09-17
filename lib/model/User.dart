@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:firebase_database/firebase_database.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 User userFromJson(String str) => User.fromJson(json.decode(str));
 
 String userToJson(User data) => json.encode(data.toJson());
@@ -13,7 +13,7 @@ class User {
   YourLocation yourLocation;
   String email;
   String profilePicture;
-
+  Timestamp timeCreate;
   User({
     this.userUid,
     this.fullName,
@@ -21,15 +21,28 @@ class User {
     this.yourLocation,
     this.email,
     this.profilePicture,
+    this.timeCreate
   });
+
+  User.fromDocument(DocumentSnapshot documentSnapshot){
+    userUid = documentSnapshot.data["userUid"];
+    fullName = documentSnapshot.data["FullName"];
+    username = documentSnapshot.data["Username"];
+//    yourLocation = YourLocation.fromSnapshotJson(snapshot);
+    email = documentSnapshot.data["Email"];
+    profilePicture = documentSnapshot.data["ProfilePicture"];
+    timeCreate = documentSnapshot.data["Created_At"];
+  }
 
   factory User.fromJson(Map<String, dynamic> json) => new User(
         userUid: json["userUid"],
         fullName: json["FullName"],
         username: json["Username"],
         yourLocation: YourLocation.fromJson(json["YourLocation"]),
+
         email: json["Email"],
         profilePicture: json["ProfilePicture"],
+      timeCreate: json["TimeCreate"]
       );
 
   User.fromSnapshotJson(DataSnapshot snapshot) {
@@ -39,6 +52,7 @@ class User {
     yourLocation = YourLocation.fromSnapshotJson(snapshot);
     email = snapshot.value["Email"];
     profilePicture = snapshot.value["ProfilePicture"];
+    timeCreate = snapshot.value["Created_At"];
   }
 
   Map<String, dynamic> toJson() => {
@@ -48,6 +62,7 @@ class User {
         "YourLocation": yourLocation.toJson(),
         "Email": email,
         "ProfilePicture": profilePicture,
+    "Created_At": timeCreate
       };
 }
 

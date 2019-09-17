@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'User.dart';
@@ -18,11 +19,9 @@ class Post {
   String propertyType;
   String turnkeyListing;
   String userId;
-  User user;
-  String dateTime;
+  Timestamp dateTime;
 
   Post({
-    this.user,
     this.key,
     this.bringMeADeal,
     this.details,
@@ -37,7 +36,6 @@ class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) =>
       new Post(
-        dateTime: json["DateTime"],
         bringMeADeal: json["BringMeADeal"],
         details: Details.fromJson(json["Details"]),
         joinVentureType: json["JoinVentureType"],
@@ -49,7 +47,6 @@ class Post {
       );
 
   Post.fromSnapshotJson(DataSnapshot snapshot) {
-    key = snapshot.key;
     dateTime = snapshot.value["DateTime"];
     bringMeADeal = snapshot.value["BringMeADeal"];
     joinVentureType = snapshot.value["JoinVentureType"];
@@ -59,6 +56,18 @@ class Post {
     propertyType = snapshot.value["PropertyType"];
     turnkeyListing = snapshot.value["TurnkeyListing"];
     userId = snapshot.value["UserId"];
+  }
+
+  Post.fromDocumentJson(DocumentSnapshot snapshot) {
+    dateTime = snapshot.data["DateTime"];
+    bringMeADeal = snapshot.data["BringMeADeal"];
+    joinVentureType = snapshot.data["JoinVentureType"];
+    listingType = snapshot.data["ListingType"];
+    location = Location.fromDocumentJson(snapshot);
+    details = Details.fromDocumentJson(snapshot);
+    propertyType = snapshot.data["PropertyType"];
+    turnkeyListing = snapshot.data["TurnkeyListing"];
+    userId = snapshot.data["UserId"];
   }
 
   Map<String, dynamic> toJson() =>
@@ -124,6 +133,19 @@ class Details {
         snapshot.value["Details"]["Pictures"].map((x) => x));
   }
 
+  Details.fromDocumentJson(DocumentSnapshot snapshot) {
+    acres = snapshot.data["Details"]["Acres"];
+    units = snapshot.data["Details"]["Units"];
+    bathRoom = snapshot.data["Details"]["BathRoom"];
+    bedRoom = snapshot.data["Details"]["BedRoom"];
+    price = snapshot.data["Details"]["Price"];
+    squareFootage = snapshot.data["Details"]["SquareFootage"];
+    turnkeyPrice = snapshot.data["Details"]["TurnkeyPrice"];
+    description = snapshot.data["Details"]["Description"];
+    pictures = new List<String>.from(
+        snapshot.data["Details"]["Pictures"].map((x) => x));
+  }
+
   Map<String, dynamic> toJson() =>
       {
         "Acres": acres,
@@ -156,6 +178,11 @@ class Location {
   Location.fromSnapshotJson(DataSnapshot snapshot) {
     city = snapshot.value["Location"]["City"];
     state = snapshot.value["Location"]["State"];
+  }
+
+  Location.fromDocumentJson(DocumentSnapshot snapshot) {
+    city = snapshot.data["Location"]["City"];
+    state = snapshot.data["Location"]["State"];
   }
 
   Map<String, dynamic> toJson() =>

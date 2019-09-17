@@ -8,6 +8,7 @@ import 'package:avid/services/auth.dart';
 import 'package:avid/screens/search_location_screen.dart';
 import 'package:avid/services/database.dart';
 import 'package:avid/utils/style.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -484,6 +485,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             profilePicture: _imageProfile,
             user: User(
                 userUid: user,
+                timeCreate: Timestamp.now(),
                 username: _username,
                 fullName: _fullName,
                 yourLocation: YourLocation(
