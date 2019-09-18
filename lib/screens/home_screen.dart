@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'Post/view_post_screen.dart';
 import 'create_post_screen.dart';
 
-GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 
 class HomeScreen extends StatefulWidget {
   ///------------------------------------------------  Parameters Section -------------------------------------///
@@ -28,7 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       backgroundColor: Color(0xffE5E5E5),
       appBar: AppBar(
         title: Text("Avid."),
@@ -54,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _addPost() {
     Navigator.push(
-        _scaffoldKey.currentContext,
+        context,
         MaterialPageRoute(
             builder: (_) =>
                 CreatePostScreen(

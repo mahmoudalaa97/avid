@@ -2,8 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
-
-import 'User.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 
 Post postFromJson(String str) => Post.fromJson(json.decode(str));
 
@@ -20,6 +19,8 @@ class Post {
   String turnkeyListing;
   String userId;
   Timestamp dateTime;
+  dynamic point;
+
 
   Post({
     this.key,
@@ -31,12 +32,14 @@ class Post {
     this.propertyType,
     this.turnkeyListing,
     this.userId,
-    this.dateTime
+    this.dateTime,
+    this.point
   });
 
   factory Post.fromJson(Map<String, dynamic> json) =>
       new Post(
         bringMeADeal: json["BringMeADeal"],
+        point: json["Point"],
         details: Details.fromJson(json["Details"]),
         joinVentureType: json["JoinVentureType"],
         listingType: json["ListingType"],
@@ -49,6 +52,7 @@ class Post {
   Post.fromSnapshotJson(DataSnapshot snapshot) {
     dateTime = snapshot.value["DateTime"];
     bringMeADeal = snapshot.value["BringMeADeal"];
+    point = snapshot.value["Point"];
     joinVentureType = snapshot.value["JoinVentureType"];
     listingType = snapshot.value["ListingType"];
     location = Location.fromSnapshotJson(snapshot);
@@ -60,6 +64,7 @@ class Post {
 
   Post.fromDocumentJson(DocumentSnapshot snapshot) {
     dateTime = snapshot.data["DateTime"];
+    point = snapshot.data["Point"] ?? null;
     bringMeADeal = snapshot.data["BringMeADeal"];
     joinVentureType = snapshot.data["JoinVentureType"];
     listingType = snapshot.data["ListingType"];
@@ -81,6 +86,7 @@ class Post {
         "PropertyType": propertyType,
         "TurnkeyListing": turnkeyListing,
         "UserId": userId,
+        "Point": point
       };
 }
 
@@ -164,9 +170,11 @@ class Location {
   String city;
   String state;
 
+
   Location({
     this.city,
     this.state,
+
   });
 
   factory Location.fromJson(Map<String, dynamic> json) =>
@@ -189,5 +197,6 @@ class Location {
       {
         "City": city,
         "State": state,
+
       };
 }

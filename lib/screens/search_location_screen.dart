@@ -56,8 +56,20 @@ class SearchLocationScreen extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     // implement buildResults
 
-    return Container(
-      color: Colors.red,
+    return FutureBuilder(
+      future: getPlace(query),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          getPlace(city);
+          predictionLocation = snapshot.data;
+          switch (query.isEmpty) {
+            case false:
+              return _buildListSearchWithRecentlySearched();
+              break;
+          }
+        }
+        return _buildListRecentlySearched();
+      },
     );
   }
 

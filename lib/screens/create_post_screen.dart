@@ -5,11 +5,13 @@ import 'package:avid/model/Post.dart';
 import 'package:avid/model/User.dart';
 import 'package:avid/services/auth.dart';
 import 'package:avid/services/database.dart';
+import 'package:avid/services/geolocation.dart';
 import 'package:avid/utils/card_create_post.dart';
 import 'package:avid/utils/style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'search_location_screen.dart';
@@ -27,7 +29,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   //------------------------------------------------  Parameters Section -------------------------------------//
   //
   final BaseAuth auth = Auth();
-
+  final BaseGeoLocation geoLocation = GeoLocation();
+  Geoflutterfire geo = Geoflutterfire();
   //**************************************** Form 1 Parameters **************************************//
   //  GlobalKey for ScaffoldState
   final GlobalKey<ScaffoldState> _scaffoldStateKey = GlobalKey<ScaffoldState>();
@@ -1513,11 +1516,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           String userId = await auth.currentUser();
           var pictureList = await widget.database
               .uploadPostPicture(picturesList: _imagesList);
+          var coordinates = await geoLocation.getLocationQuery(
+              "$_yourCityText, $_yourStateText");
+          GeoFirePoint point = geo.point(
+              latitude: coordinates.latitude, longitude: coordinates.longitude);
           try {
             widget.database.createPost(
                 post: Post(
                     dateTime: Timestamp.now(),
                     userId: userId,
+                    point: point.data,
                     location:
                     Location(city: _yourCityText, state: _yourStateText),
                     listingType: _listingTypeText,
