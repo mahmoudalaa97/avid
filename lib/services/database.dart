@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:avid/model/Post.dart';
 import 'package:avid/model/User.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'auth.dart';
 
 abstract class BaseDatabase {
   Future createUsers({File profilePicture, User user});
@@ -14,7 +17,11 @@ abstract class BaseDatabase {
 
   Future<DataSnapshot> getUser(String uid);
 
+  Future<User> getCurrentUser();
+
   Stream<QuerySnapshot> getPost();
+
+  Stream<QuerySnapshot> getUserPost(String userId);
 
   Stream<DocumentSnapshot> getUserOfPost(String userId);
 
@@ -23,7 +30,7 @@ abstract class BaseDatabase {
 
 class Database implements BaseDatabase {
   final DatabaseReference databaseReference =
-      FirebaseDatabase.instance.reference();
+  FirebaseDatabase.instance.reference();
 
   @override
   Future<List<String>> uploadPostPicture({List<File> picturesList}) async {
@@ -34,7 +41,7 @@ class Database implements BaseDatabase {
           'PostPictures/post${dateTime.hour}${dateTime.minute}${dateTime.second}${dateTime.millisecond}' +
               '.jpg';
       StorageReference reference =
-          FirebaseStorage.instance.ref().child(pathPostPictures);
+      FirebaseStorage.instance.ref().child(pathPostPictures);
       final task = reference.putFile(picture);
       final taskSnapshot = await task.onComplete;
       String pathPicture = await taskSnapshot.ref.getDownloadURL();
@@ -50,10 +57,13 @@ class Database implements BaseDatabase {
 
   @override
   Future createPost({Post post}) async {
-    return Firestore.instance
-        .collection("Post")
-        .document()
-        .setData(post.toJson());
+    var reference = Firestore.instance.collection("Post");
+    return reference.add(post.toJson()).then((DocumentReference ref) {
+      String docId = ref.documentID;
+      reference
+          .document(docId)
+          .updateData({"postId": docId});
+    });
   }
 
   @override
@@ -86,6 +96,29 @@ class Database implements BaseDatabase {
     return Firestore.instance
         .collection('User')
         .document(userId)
-        .get().asStream();
+        .get()
+        .asStream();
+  }
+
+  @override
+  Stream<QuerySnapshot> getUserPost(String userId) {
+    // TODO: implement getUserPost
+
+    return Firestore.instance
+        .collection("Post")
+        .where("UserId", isEqualTo: userId)
+        .orderBy("DateTime", descending: true)
+        .snapshots();
+  }
+
+  @override
+  Future<User> getCurrentUser() async {
+    // TODO: implement getCurrentUs
+    BaseAuth auth = Auth();
+    String userId = await auth.currentUser();
+    DocumentSnapshot documentSnapshot =
+    await Firestore.instance.collection("User").document(userId).get();
+    User user = User.fromDocument(documentSnapshot);
+    return user;
   }
 }

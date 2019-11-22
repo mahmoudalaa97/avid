@@ -1,6 +1,11 @@
+import 'dart:convert';
+
+import 'package:avid/model/User.dart';
 import 'package:avid/screens/home_screen.dart';
 import 'package:avid/screens/login_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth.dart';
 import 'database.dart';
@@ -39,7 +44,7 @@ class _RootPageState extends State<RootPage> {
 
   void _signedOut() async {
     setState(() {
-        _authStatus = AuthStatus.notSignedIn;
+      _authStatus = AuthStatus.notSignedIn;
     });
   }
 
@@ -47,6 +52,20 @@ class _RootPageState extends State<RootPage> {
     setState(() {
       _authStatus = AuthStatus.notSignedIn;
     });
+  }
+
+  Future<bool> saveUserData() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    BaseDatabase database = Database();
+    User users = await database.getCurrentUser();
+    String user = jsonEncode(users.toJson());
+
+    return sharedPreferences.setString("user", user);
+//    BaseAuth auth =Auth();
+//    auth.currentUser().then((userId){
+//      saved= sharedPreferences.setString("userId", userId);
+//    });
+
   }
 
   @override
@@ -59,6 +78,7 @@ class _RootPageState extends State<RootPage> {
           onSignedUp: _signedUp,
         );
       case AuthStatus.signedIn:
+        saveUserData();
         return HomeScreen(
           auth: widget.auth,
           onSignedOut: _signedOut,

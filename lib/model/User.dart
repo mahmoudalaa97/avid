@@ -28,10 +28,10 @@ class User {
     userUid = documentSnapshot.data["userUid"];
     fullName = documentSnapshot.data["FullName"];
     username = documentSnapshot.data["Username"];
-//    yourLocation = YourLocation.fromSnapshotJson(snapshot);
+    yourLocation = YourLocation.fromDocument(documentSnapshot);
     email = documentSnapshot.data["Email"];
     profilePicture = documentSnapshot.data["ProfilePicture"];
-    timeCreate = documentSnapshot.data["Created_At"];
+    timeCreate = documentSnapshot.data["Created_At"] as Timestamp;
   }
 
   factory User.fromJson(Map<String, dynamic> json) => new User(
@@ -39,7 +39,6 @@ class User {
         fullName: json["FullName"],
         username: json["Username"],
         yourLocation: YourLocation.fromJson(json["YourLocation"]),
-
         email: json["Email"],
         profilePicture: json["ProfilePicture"],
       timeCreate: json["TimeCreate"]
@@ -62,7 +61,7 @@ class User {
         "YourLocation": yourLocation.toJson(),
         "Email": email,
         "ProfilePicture": profilePicture,
-    "Created_At": timeCreate
+    "Created_At": timeCreate.millisecondsSinceEpoch
       };
 }
 
@@ -83,6 +82,11 @@ class YourLocation {
   YourLocation.fromSnapshotJson(DataSnapshot snapshot) {
     city = snapshot.value["YourLocation"]["City"];
     state = snapshot.value["YourLocation"]["State"];
+  }
+
+  YourLocation.fromDocument(DocumentSnapshot snapshot) {
+    city = snapshot.data["YourLocation"]["City"];
+    state = snapshot.data["YourLocation"]["State"];
   }
 
   Map<String, dynamic> toJson() => {

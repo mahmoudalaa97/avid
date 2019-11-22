@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 
+import 'User.dart';
+
 Post postFromJson(String str) => Post.fromJson(json.decode(str));
 
 String postToJson(Post data) => json.encode(data.toJson());
@@ -20,10 +22,10 @@ class Post {
   String userId;
   Timestamp dateTime;
   dynamic point;
+  String nameUser;
+  String imageUser;
 
-
-  Post({
-    this.key,
+  Post({this.key,
     this.bringMeADeal,
     this.details,
     this.joinVentureType,
@@ -33,21 +35,25 @@ class Post {
     this.turnkeyListing,
     this.userId,
     this.dateTime,
-    this.point
+    this.point,
+    this.nameUser,
+    this.imageUser,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) =>
       new Post(
-        bringMeADeal: json["BringMeADeal"],
-        point: json["Point"],
-        details: Details.fromJson(json["Details"]),
-        joinVentureType: json["JoinVentureType"],
-        listingType: json["ListingType"],
-        location: Location.fromJson(json["Location"]),
-        propertyType: json["PropertyType"],
-        turnkeyListing: json["TurnkeyListing"],
-        userId: json["UserId"],
-      );
+          bringMeADeal: json["BringMeADeal"],
+          point: json["Point"],
+          details: Details.fromJson(json["Details"]),
+          joinVentureType: json["JoinVentureType"],
+          listingType: json["ListingType"],
+          location: Location.fromJson(json["Location"]),
+          propertyType: json["PropertyType"],
+          turnkeyListing: json["TurnkeyListing"],
+          userId: json["UserId"],
+          nameUser: json["nameUser"],
+          imageUser: json["imageUser"],
+          dateTime: json["DateTime"]);
 
   Post.fromSnapshotJson(DataSnapshot snapshot) {
     dateTime = snapshot.value["DateTime"];
@@ -60,6 +66,8 @@ class Post {
     propertyType = snapshot.value["PropertyType"];
     turnkeyListing = snapshot.value["TurnkeyListing"];
     userId = snapshot.value["UserId"];
+    nameUser = snapshot.value["nameUser"];
+    imageUser = snapshot.value["imageUser"];
   }
 
   Post.fromDocumentJson(DocumentSnapshot snapshot) {
@@ -73,6 +81,8 @@ class Post {
     propertyType = snapshot.data["PropertyType"];
     turnkeyListing = snapshot.data["TurnkeyListing"];
     userId = snapshot.data["UserId"];
+    nameUser = snapshot.data["nameUser"];
+    imageUser = snapshot.data["imageUser"];
   }
 
   Map<String, dynamic> toJson() =>
@@ -86,7 +96,9 @@ class Post {
         "PropertyType": propertyType,
         "TurnkeyListing": turnkeyListing,
         "UserId": userId,
-        "Point": point
+        "Point": point,
+        "nameUser": nameUser,
+        "imageUser": imageUser,
       };
 }
 
@@ -170,11 +182,9 @@ class Location {
   String city;
   String state;
 
-
   Location({
     this.city,
     this.state,
-
   });
 
   factory Location.fromJson(Map<String, dynamic> json) =>
@@ -197,6 +207,5 @@ class Location {
       {
         "City": city,
         "State": state,
-
       };
 }

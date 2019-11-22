@@ -7,9 +7,9 @@ class CardViewPost extends StatefulWidget {
   final String timesPost;
   final bool favorite;
   final int index;
-  final User user;
+
   CardViewPost(
-      {this.post, this.timesPost, this.favorite = true, this.index = 0, this.user});
+      {this.post, this.timesPost, this.favorite = true, this.index = 0,});
 
   @override
   _CardViewPostState createState() => _CardViewPostState();
@@ -40,6 +40,7 @@ class _CardViewPostState extends State<CardViewPost> {
         margin: EdgeInsets.all(2),
         child: Container(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
                 height: 50,
@@ -54,7 +55,7 @@ class _CardViewPostState extends State<CardViewPost> {
                           image: DecorationImage(
                               fit: BoxFit.fill,
                               image: NetworkImage(
-                                  widget.user.profilePicture))),
+                                  widget.post.imageUser))),
                     ),
                     Expanded(
                       child: Container(
@@ -66,7 +67,7 @@ class _CardViewPostState extends State<CardViewPost> {
                             Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  widget.user.username,
+                                  widget.post.nameUser,
                                   style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold),
@@ -322,7 +323,6 @@ class _CardViewPostState extends State<CardViewPost> {
         builder: (_) =>
             DetailsPost(favorite: false,
               post: widget.post,
-              user: widget.user,
               index: widget.index,)));
   }
 }
@@ -330,10 +330,9 @@ class _CardViewPostState extends State<CardViewPost> {
 class DetailsPost extends StatefulWidget {
   final Post post;
   final bool favorite;
-  final User user;
   final int index;
 
-  const DetailsPost({Key key, this.favorite, this.post, this.user, this.index})
+  const DetailsPost({Key key, this.favorite, this.post, this.index})
       : super(key: key);
 
   @override
@@ -378,7 +377,7 @@ class _DetailsPostState extends State<DetailsPost> {
                               shape: BoxShape.circle,
                               image: DecorationImage(
                                   image: NetworkImage(
-                                      widget.user.profilePicture),
+                                      widget.post.imageUser),
                                   fit: BoxFit.fill)),
                         ),
                         Expanded(
@@ -391,7 +390,7 @@ class _DetailsPostState extends State<DetailsPost> {
                                 Align(
                                     alignment: Alignment.topLeft,
                                     child: Text(
-                                      "${widget.user.username}",
+                                      "${widget.post.nameUser}",
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold),

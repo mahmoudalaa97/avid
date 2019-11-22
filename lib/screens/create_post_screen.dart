@@ -9,7 +9,6 @@ import 'package:avid/services/geolocation.dart';
 import 'package:avid/utils/card_create_post.dart';
 import 'package:avid/utils/style.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:image_picker/image_picker.dart';
@@ -31,6 +30,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   final BaseAuth auth = Auth();
   final BaseGeoLocation geoLocation = GeoLocation();
   Geoflutterfire geo = Geoflutterfire();
+
   //**************************************** Form 1 Parameters **************************************//
   //  GlobalKey for ScaffoldState
   final GlobalKey<ScaffoldState> _scaffoldStateKey = GlobalKey<ScaffoldState>();
@@ -74,8 +74,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   bool _joinVentureTypeError = false;
   String _bringMeADealTypeText;
   bool _bringMeADealTypeError = false;
-
-
 
   // To Save Your Property Type
   String _propertyTypeText;
@@ -1516,8 +1514,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           String userId = await auth.currentUser();
           var pictureList = await widget.database
               .uploadPostPicture(picturesList: _imagesList);
-          var coordinates = await geoLocation.getLocationQuery(
-              "$_yourCityText, $_yourStateText");
+          User user = await widget.database.getCurrentUser();
+          var coordinates = await geoLocation
+              .getLocationQuery("$_yourCityText, $_yourStateText");
           GeoFirePoint point = geo.point(
               latitude: coordinates.latitude, longitude: coordinates.longitude);
           try {
@@ -1526,6 +1525,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     dateTime: Timestamp.now(),
                     userId: userId,
                     point: point.data,
+                    nameUser: user.username,
+                    imageUser: user.profilePicture,
                     location:
                     Location(city: _yourCityText, state: _yourStateText),
                     listingType: _listingTypeText,
@@ -1540,10 +1541,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         squareFootage: _squareFootage,
                         price: _price,
                         turnkeyPrice: _turnkeyPrice,
-                        bathRoom: _bathRoomNumber == 0 ? null : _bathRoomNumber
-                            .toString(),
-                        bedRoom: _bedRoomNumber == 0 ? null : _bedRoomNumber
-                            .toString(),
+                        bathRoom: _bathRoomNumber == 0
+                            ? null
+                            : _bathRoomNumber.toString(),
+                        bedRoom: _bedRoomNumber == 0
+                            ? null
+                            : _bedRoomNumber.toString(),
                         description: _description)));
 
             _postSuccessfully();
@@ -1603,15 +1606,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 content: Text(
                     "All changes will be lost.Do you want to go back?"),
                 actions: <Widget>[
-                  FlatButton(child: Text("NO"),
-                    onPressed: () => Navigator.of(cb).pop(false)
-                    ,),
-                  FlatButton(child: Text("YES"),
-                    onPressed: () => Navigator.of(cb).pop(true)
-                    ,)
+                  FlatButton(
+                    child: Text("NO"),
+                    onPressed: () => Navigator.of(cb).pop(false),
+                  ),
+                  FlatButton(
+                    child: Text("YES"),
+                    onPressed: () => Navigator.of(cb).pop(true),
+                  )
                 ],
-              )
-      ) ??
+              )) ??
           false;
     } else {
       _pageController.previousPage(
@@ -1619,7 +1623,4 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       return false;
     }
   }
-
 }
-
-

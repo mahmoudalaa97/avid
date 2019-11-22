@@ -1,5 +1,11 @@
+import 'dart:convert';
+
+import 'package:avid/model/User.dart';
+import 'package:avid/services/database.dart';
 import 'package:avid/utils/style.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/auth.dart';
 import 'forgot_password_screen.dart';
 import 'signup_screen.dart';
@@ -193,8 +199,8 @@ class _LoginScreenState extends State<LoginScreen> {
               context,
               MaterialPageRoute(
                   builder: (_) => ForgotPasswordScreen(
-                        auth: Auth(),
-                      )));
+                    auth: Auth(),
+                  )));
         },
         child: Text(
           "FORGOT LOG IN ?",
@@ -247,9 +253,9 @@ class _LoginScreenState extends State<LoginScreen> {
   goToSignUpScreen() {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => SignUpScreen(
-              auth: widget.auth,
-              onSignedUp: widget.onSignedUp,
-            )));
+          auth: widget.auth,
+          onSignedUp: widget.onSignedUp,
+        )));
     _formKey.currentState.reset();
     setState(() {
       _autoValidate = false;
@@ -262,14 +268,22 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   validateFireBaseError() async {
+    showDialog(context: context, builder: (_) =>
+        AlertDialog(content: Container(
+            height: 50,
+            child: Center(child: CircularProgressIndicator(),)),));
     try {
       String user =
-          await widget.auth.signInWithEmailAndPassword(_email, _password);
+      await widget.auth.signInWithEmailAndPassword(_email, _password);
       if (user != null) {
-        widget.onSignedIn();
+        bool saved = await saveUserData();
+        if (saved) {
+          widget.onSignedIn();
+          Navigator.of(context, rootNavigator: true).pop('dialog');
+        }
       }
     } catch (e) {
-      print(e.code);
+      print(e);
       switch (e.code) {
         case 'ERROR_NETWORK_REQUEST_FAILED':
           _scaffoldStateKey.currentState.showSnackBar(SnackBar(
@@ -305,6 +319,15 @@ class _LoginScreenState extends State<LoginScreen> {
           ));
           break;
       }
+      Navigator.of(context, rootNavigator: true).pop('dialog');
     }
+  }
+
+  Future<bool> saveUserData() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    BaseDatabase database = Database();
+    User users = await database.getCurrentUser();
+    String user = jsonEncode(users.toJson());
+    return sharedPreferences.setString("user", user);
   }
 }

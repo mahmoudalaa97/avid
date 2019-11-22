@@ -52,30 +52,19 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshott) {
         if (snapshott.hasError) return new Text('Error: ${snapshott.error}');
         if (snapshott.hasData) {
-          return new ListView.builder(
+          if (snapshott.data.documents.length == 0) {
+            return Center(
+              child: Text("Data not found in Search!"),
+            );
+          }
+          return ListView.builder(
             itemCount: snapshott.data.documents.length,
-            itemBuilder: (context, index) {
-              return StreamBuilder<DocumentSnapshot>(
-                stream: database
-                    .getUserOfPost(snapshott.data.documents[index]["UserId"]),
-                builder: (BuildContext context,
-                    AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
-                  if (snapshot.hasData) {
-                    User user = User.fromDocument(snapshot.data);
-                    Post post =
-                    Post.fromDocumentJson(snapshott.data.documents[index]);
-                    return CardViewPost(
-                      post: post,
-                      index: index,
-                      user: user,
-                    );
-                  } else
-                    return Center(
-                      child: Container(),
-                    );
-                },
+            itemBuilder: (BuildContext context, index) {
+              Post post =
+              Post.fromDocumentJson(snapshott.data.documents[index]);
+              return CardViewPost(
+                post: post,
+                index: index,
               );
             },
           );
@@ -190,39 +179,29 @@ class _ViewPostScreenState extends State<ViewPostScreen> {
       stream: stream,
       builder: (BuildContext context,
           AsyncSnapshot<List<DocumentSnapshot>> snapshott) {
-        if (snapshott.hasError) print('Error: ${snapshott.error}');
+        if (snapshott.hasError) return new Text('Error: ${snapshott.error}');
         if (snapshott.hasData) {
-          if (snapshott.data.length == 0) return Center(
-            child: Text("Not Found Post in Your Search..."),
+          if (snapshott.data.length == 0) {
+            return Center(
+              child: Text("Data not found in Search!"),
           );
-          return new ListView.builder(
+          }
+          return ListView.builder(
             itemCount: snapshott.data.length,
-            itemBuilder: (context, index) {
-              return StreamBuilder<DocumentSnapshot>(
-                stream:
-                database.getUserOfPost(snapshott.data[index]["UserId"]),
-                builder: (BuildContext context,
-                    AsyncSnapshot<DocumentSnapshot> snapshot) {
-                  if (snapshot.hasError)
-                    return new Text('Error: ${snapshot.error}');
-                  if (snapshot.hasData) {
-                    User user = User.fromDocument(snapshot.data);
-                    Post post = Post.fromDocumentJson(snapshott.data[index]);
-                    return CardViewPost(
-                      post: post,
-                      index: index,
-                      user: user,
-                    );
-                  } else
-                    return Center();
-                },
+            itemBuilder: (BuildContext context, index) {
+              Post post =
+              Post.fromDocumentJson(snapshott.data[index]);
+              return CardViewPost(
+                post: post,
+                index: index,
               );
             },
           );
-        }
+        } else {
         return Center(
           child: CircularProgressIndicator(),
         );
+        }
       },
     );
   }
