@@ -43,8 +43,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   PageController _pageController;
 
   // To Save Your Location Here
-  String _yourCityText;
-  String _yourStateText;
+  String _yourCityText="s";
+  String _yourStateText="s";
   bool _locationError = false;
 
   // To Save Your Listing Type

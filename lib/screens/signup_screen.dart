@@ -54,8 +54,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _fullName;
 
   // To Save Your Location Here
-  String _yourCity = "";
-  String _yourState = "";
+  String _yourCity = "ss";
+  String _yourState = "ss";
 
   // To Save Email Here
   String _email;
